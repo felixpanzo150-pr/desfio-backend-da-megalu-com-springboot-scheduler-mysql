@@ -52,7 +52,7 @@ public class Channel {
             this.description = description;
         }
 
-        public Channel tocHANNEL(){
+        public Channel toChannel(){
             return new Channel(id, description);
         }
     }
