@@ -2,7 +2,10 @@ package tech.felixpanzo.megalums.service;
 
 import org.springframework.stereotype.Service;
 import tech.felixpanzo.megalums.dto.ScheduleNotificationDto;
+import tech.felixpanzo.megalums.entity.Notification;
 import tech.felixpanzo.megalums.repository.NotificationRepository;
+
+import java.util.Optional;
 
 @Service
 public class NotificationService {
@@ -15,5 +18,9 @@ public class NotificationService {
 
     public void scheduleNotification(ScheduleNotificationDto dto){
         notificationRepository.save(dto.toNotification());
+    }
+
+    public Optional<Notification> findById(Long notificationId){
+        return notificationRepository.findById(notificationId);
     }
 }

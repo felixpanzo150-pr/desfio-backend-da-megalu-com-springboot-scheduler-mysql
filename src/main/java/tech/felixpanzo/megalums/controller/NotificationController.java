@@ -1,18 +1,16 @@
 package tech.felixpanzo.megalums.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.felixpanzo.megalums.dto.ScheduleNotificationDto;
+import tech.felixpanzo.megalums.entity.Notification;
 import tech.felixpanzo.megalums.service.NotificationService;
 
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {
 
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
     public NotificationController(NotificationService notificationService){
         this.notificationService = notificationService;
@@ -23,5 +21,16 @@ public class NotificationController {
         notificationService.scheduleNotification(dto);
 
         return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/{notificationId}")
+    public ResponseEntity<Notification> getNotification(@PathVariable("notificationId") Long notificationId){
+        var notification = notificationService.findById(notificationId);
+
+        if (notification.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(notification.get());
     }
 }
