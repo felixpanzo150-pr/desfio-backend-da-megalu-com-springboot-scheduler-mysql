@@ -6,7 +6,10 @@ import tech.felixpanzo.megalums.entity.Notification;
 import tech.felixpanzo.megalums.entity.Status;
 import tech.felixpanzo.megalums.repository.NotificationRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class NotificationService {
@@ -32,5 +35,25 @@ public class NotificationService {
             notification.get().setStatus(Status.Values.CANCELED.toStatus());
             notificationRepository.save(notification.get());
         }
+    }
+
+    public void checkAndSend(LocalDateTime dateTime){
+        var notifications = notificationRepository.findByStatusInAndDateTimeBefore(
+                List.of(Status.Values.PENDING.toStatus(),
+                Status.Values.ERROR.toStatus()),
+                dateTime
+        );
+        
+        notifications.forEach(sendNotification());
+    }
+
+    private Consumer<Notification> sendNotification() {
+        return n -> {
+
+            //TODO - realizar o envio da notificaçāo
+
+            n.setStatus(Status.Values.SUCCESS.toStatus());
+            notificationRepository.save(n);
+        };
     }
 }
